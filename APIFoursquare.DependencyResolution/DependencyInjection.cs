@@ -2,6 +2,8 @@
 using APIFoursquare.Repository.Implementation;
 using APIFoursquare.Repository.Interface;
 using APIFoursquare.Services;
+using APIFoursquare.Services.Implementation;
+using APIFoursquare.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,8 @@ namespace APIFoursquare.DependencyResolution
         public static void AddPersistence(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddTransient<IFoursquareService, FoursquareService>();
         }
 
         /// <summary>
