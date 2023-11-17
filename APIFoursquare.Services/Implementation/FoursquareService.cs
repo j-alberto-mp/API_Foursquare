@@ -36,17 +36,14 @@ namespace APIFoursquare.Services.Implementation
 
                         RatingViewModel rating = JsonConvert.DeserializeObject<RatingViewModel>(contenidoDetalle) ?? new();
 
-                        l.DetalleLugar = new()
-                        {
-                            Puntuacion = rating.Puntuacion,
-                            FotosLugar = new()
-                        };
+                        l.Puntuacion = rating.Puntuacion;
+                        l.FotosLugar = new();
 
                         RestClientOptions opcionesFotos = new($"https://api.foursquare.com/v3/places/{l.Id}/photos?limit=5&sort=NEWEST&classifications=indoor");
 
                         string contenidoFotos = await CrearPeticionAsync(opcionesFotos);
 
-                        l.DetalleLugar.FotosLugar = JsonConvert.DeserializeObject<List<FotosViewModel>>(contenidoFotos) ?? new();
+                        l.FotosLugar = JsonConvert.DeserializeObject<List<FotosViewModel>>(contenidoFotos) ?? new();
                     }
                 }
 
