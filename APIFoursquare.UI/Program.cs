@@ -1,7 +1,13 @@
+using APIFoursquare.DependencyResolution;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext(builder.Configuration);
+builder.Services.AddPersistence();
+builder.Services.AddAppLayer();
 
 var app = builder.Build();
 
