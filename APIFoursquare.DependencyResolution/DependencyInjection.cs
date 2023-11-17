@@ -33,6 +33,7 @@ namespace APIFoursquare.DependencyResolution
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddTransient<IFoursquareService, FoursquareService>();
+            services.AddTransient<ICategoriaService, CategoriaService>();
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace APIFoursquare.Services.Implementation
             {
                 List<LugarViewModel> lugares = new();
 
-                RestClientOptions options = new($"https://api.foursquare.com/v3/places/search?ll={latitud}%2C{longitud}&categories={categoria}&fields=fsq_id%2Cgeocodes%2Clocation%2Cname&limit=20");
+                RestClientOptions options = new($"https://api.foursquare.com/v3/places/search?ll={latitud}%2C{longitud}&radius=500&categories={categoria}&fields=fsq_id%2Cgeocodes%2Clocation%2Cname&limit=15");
                 
                 string contenidoLugares = await CrearPeticionAsync(options);
 
@@ -30,20 +30,26 @@ namespace APIFoursquare.Services.Implementation
 
                     foreach (LugarViewModel l in lugares)
                     {
-                        RestClientOptions opcionesDetalle = new($"https://api.foursquare.com/v3/places/{l.Id}?fields=rating");
+                        try
+                        {
+                            RestClientOptions opcionesDetalle = new($"https://api.foursquare.com/v3/places/{l.Id}?fields=rating");
 
-                        string contenidoDetalle = await CrearPeticionAsync(opcionesDetalle);
+                            string contenidoDetalle = await CrearPeticionAsync(opcionesDetalle);
 
-                        RatingViewModel rating = JsonConvert.DeserializeObject<RatingViewModel>(contenidoDetalle) ?? new();
+                            Rating rating = JsonConvert.DeserializeObject<Rating>(contenidoDetalle) ?? new();
 
-                        l.Puntuacion = rating.Puntuacion;
-                        l.FotosLugar = new();
+                            l.Puntuacion = rating.Puntuacion;
+                            l.FotosLugar = new();
 
-                        RestClientOptions opcionesFotos = new($"https://api.foursquare.com/v3/places/{l.Id}/photos?limit=5&sort=NEWEST&classifications=indoor");
+                            RestClientOptions opcionesFotos = new($"https://api.foursquare.com/v3/places/{l.Id}/photos?limit=5&sort=NEWEST");
 
-                        string contenidoFotos = await CrearPeticionAsync(opcionesFotos);
+                            string contenidoFotos = await CrearPeticionAsync(opcionesFotos);
 
-                        l.FotosLugar = JsonConvert.DeserializeObject<List<FotosViewModel>>(contenidoFotos) ?? new();
+                            l.FotosLugar = JsonConvert.DeserializeObject<List<Fotos>>(contenidoFotos) ?? new();
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
                 }
 

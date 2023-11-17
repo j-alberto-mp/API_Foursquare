@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using APIFoursquare.Application;
+using APIFoursquare.Data;
+using AutoMapper;
 
 namespace APIFoursquare.Services.Mappings
 {
@@ -6,7 +8,9 @@ namespace APIFoursquare.Services.Mappings
     {
         public GeneralProfile()
         {
-
+            CreateMap<Categoria, CategoriaViewModel>()
+                .ForMember(q => q.CategoriaId, f => f.MapFrom(q => q.Id))
+                .ForMember(q => q.NombreCategoria, f => f.MapFrom(q => q.Nombre));
         }
     }
 }

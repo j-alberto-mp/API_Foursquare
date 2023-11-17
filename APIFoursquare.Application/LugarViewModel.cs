@@ -15,27 +15,39 @@ namespace APIFoursquare.Application
         [JsonProperty("name")]
         public string Nombre { get; set; }
 
-        [JsonProperty("geocodes.main.latitude")]
-        public decimal Latitude { get; set; }
-
-        [JsonProperty("geocodes.main.longitude")]
-        public decimal Longitude { get; set; }
+        [JsonProperty("geocodes")]
+        public Geocodes Geocodes { get; set; }
 
         [JsonProperty("location.formatted_address")]
         public string Direccion { get; set; }
 
         public decimal Puntuacion { get; set; }
 
-        public List<FotosViewModel> FotosLugar { get; set; }
+        public List<Fotos> FotosLugar { get; set; }
     }
 
-    public class RatingViewModel
+    public class Geocodes
+    {
+        [JsonProperty("main")]
+        public MainGeocode Main { get; set; }
+    }
+
+    public class MainGeocode
+    {
+        [JsonProperty("latitude")]
+        public decimal Latitud { get; set; }
+
+        [JsonProperty("longitude")]
+        public decimal Longitud { get; set; }
+    }
+
+    public class Rating
     {
         [JsonProperty("rating")]
         public decimal Puntuacion { get; set; }
     }
 
-    public class FotosViewModel
+    public class Fotos
     {
         [JsonProperty("prefix")]
         public string UrlBase { get; set; }

@@ -1,5 +1,80 @@
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('./assets/fonts/NotoSans-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('./assets/fonts/NotoSans-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('./assets/fonts/NotoSans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('./assets/fonts/NotoSans-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+:root {
+    --morado-base: #743b8d;
+    --azul-base: #00a4dd;
+    --verde-base: #3aa438;
+    --naranja-base: #e64e23;
+    --rosa-base: #e6007e;
+    --morado-claro: #ab85b4;
+    --azul-claro: #80ccf3;
+    --verde-claro: #afcf95;
+    --naranja-claro: #f2af89;
+    --rosa-claro: #ef9bbe;
+    --morado-oscuro: #372c65;
+    --azul-oscuro: #0075b8;
+    --verde-oscuro: #196733;
+    --naranja-oscuro: #cf2d1e;
+    --rosa-oscuro: #c32b75;
+}
+
+*,
+*::before,
+*::after,
+:root {
+    box-sizing: border-box;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #adb5bd #dee2e6;
+}
+
+    /* Works on Chrome/Edge/Safari */
+    *::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: #dee2e6;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--morado-base);
+        border-radius: 20px;
+        border: 3px solid #dee2e6;
+    }
+
 html {
-  font-size: 14px;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: calc(12px + 0.390625vw);
+    color: #333;
 }
 
 @media (min-width: 768px) {
@@ -10,9 +85,127 @@ html {
 
 html {
   position: relative;
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 body {
-  margin-bottom: 60px;
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: #ffffff;
 }
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: calc(1.375rem + 1.5vw);
+}
+
+h2 {
+    font-size: calc(1.325rem + .9vw);
+}
+
+h3 {
+    font-size: calc(1.3rem + .6vw);
+}
+
+h4 {
+    font-size: calc(1.275rem + .3vw);
+    margin-top: 1.3rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #c2bebe;
+}
+
+h5 {
+    font-size: 1.25rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+}
+
+button {
+    opacity: 0.95;
+}
+
+    button:hover {
+        opacity: 1;
+    }
+
+select {
+    width: 50% !important;
+}
+
+.container {
+    height: calc(100vh - 60px);
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+    #map .gm-style-iw-d div {
+        display: grid;
+    }
+
+    #map .custom-map-control-button {
+        font-family: inherit;
+        font-size: calc(10px + 0.390625vw);
+        text-transform: uppercase;
+        text-align: center;
+        color: #ffffff;
+        background-color: var(--morado-base);
+        margin-top: 10px;
+        margin-right: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+        -webkit-transition: 1s;
+        -o-transition: 1s;
+        transition: 1s;
+    }
+
+        #map .custom-map-control-button:hover {
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+        }
+
+    #map .imagen-mapa {
+        width: 200px;
+        height: 100px;
+        margin: 10px 0 10px 0;
+    }
+
+    #map .titulo-mapa {
+        margin: 0;
+    }
+
+    #map .etiqueta-mapa {
+        font-family: inherit;
+        font-size: calc(9px + 0.390625vw);
+        margin: 5px 0 5px 0;
+    }
+
+    #map .boton-mapa {
+        font-family: inherit;
+        font-size: calc(8px + 0.390625vw);
+        text-transform: uppercase;
+        background: var(--rosa-base);
+        color: #ffffff;
+        padding: 10px;
+        margin: auto;
+        border: none;
+        cursor: pointer;
+    }
