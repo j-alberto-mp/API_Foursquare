@@ -36,8 +36,8 @@ obtenerLugares()
                 }
 
                 favoritos += `
-                <div class="col col-md-3 m-3">
-                    <div class="card" style="width: 18rem;">
+                <div class="col-6 col-md-3 col-md-4 col-lg-3">
+                    <div class="card">
                         <div id="carousel_${fv.idLugar}" class="carousel slide" data-ride="carousel">
                             <div class="carousel-inner">
                                 ${imagenes}

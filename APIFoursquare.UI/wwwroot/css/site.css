@@ -187,3 +187,8 @@ select {
         width: 250px;
         text-align: center;
     }
+
+.card {
+    height: 420px;
+    overflow: hidden;
+}
