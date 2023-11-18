@@ -1,4 +1,4 @@
-﻿using APIFoursquare.Application;
+﻿using APIFoursquare.Application.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,6 @@ namespace APIFoursquare.Services.Interface
         /// Obtener la lista de las categorías
         /// </summary>
         /// <returns></returns>
-        Task<List<CategoriaViewModel>> ObtenerListaAsync();
+        Task<List<CategoriaView>> ObtenerListaAsync();
     }
 }

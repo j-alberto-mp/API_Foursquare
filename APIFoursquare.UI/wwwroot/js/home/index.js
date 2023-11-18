@@ -4,7 +4,7 @@ let categorias = $('#categorias');
 
 let map;
 let infoWindow;
-let markers = [];
+let markers = [];  
 let pos = {
     lat: 19.04334,
     lng: -98.20193,
@@ -33,6 +33,8 @@ categorias.on('change', () => {
         .then((resultado) => {
             if (resultado.length > 0) {
                 addMarker(resultado); 
+
+                Swal.close();
             }
             else {
                 Swal.fire({
@@ -46,8 +48,7 @@ categorias.on('change', () => {
                 });
             }
         })
-        .catch((error) => {
-            console.log(error);
+        .catch((error) => {   
             if (error.responseText) {
                 Swal.fire({
                     icon: 'error',
@@ -115,6 +116,8 @@ let initMap = () => {
             handleLocationError(false, infoWindow, map.getCenter());
         }
     });
+
+    
 };
 
 let handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
@@ -129,10 +132,33 @@ let handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
 
 let addMarker = (lugares) => {
     $.each(lugares, (i, v) => {
-        let content = `<h6 class="titulo-mapa">${v.nombre}</h6>` +
-            `${v.fotosLugar[0] ? `<img src="${v.fotosLugar[0].urlBase}640x640${v.fotosLugar[0].archivo}" class="imagen-mapa">` : ''}` +
-            `<label class="etiqueta-mapa">Puntuación: <b>${v.puntuacion}</b></label>` +
-            `<button onclick="" class="boton-mapa">Agregar a favoritos</button>`;
+        let imagenes = '';
+
+        if (v.fotosLugar[0]) {
+            $.each(v.fotosLugar, (ii, iv) => {
+                imagenes += `
+                    <div class="carousel-item${ii === 0 ? ' active' : ''}">
+                        <img class="d-block w-100" src="${iv.urlBase}350x350${iv.archivo}" alt="Foto ${ii + 1}">
+                    </div>`;
+            });
+        }
+        else {
+            imagenes = `
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="../../img/default-image_450.png" alt="Foto no existente">
+                </div>`;
+        }
+
+        let content =
+            `<h6 class="titulo-mapa" id="nombre_${v.id}">${v.nombre}</h6>
+            <div id="carousel_${v.id}" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    ${imagenes}
+                </div>
+            </div>
+            <label class="puntuacion-mapa">Puntuación: <b id="puntuacion_${v.id}">${v.puntuacion}</b></label>
+            <label class="direccion-mapa" id="direccion_${v.id}">${v.direccion.calle}</label>
+            <button onclick="guardarFavorito('${v.id}', ${v.geocodes.main.latitud}, ${v.geocodes.main.longitud})" class="boton-mapa">Agregar a favoritos</button>`;
         
         let marker = new google.maps.Marker({
             position: {
@@ -158,14 +184,20 @@ let addMarker = (lugares) => {
                 anchor: marker,
                 map,
             }); 
+
+            google.maps.event.addListener(infoWindow, 'domready', function () {
+                // El contenido del InfoWindow se ha cargado completamente, en este punto se puede iniciar el carrusel
+                $('#map div.carousel').carousel(0);
+                $('#map div.carousel').carousel({
+                    interval: 100
+                });
+            });
         });
 
         map.addListener("click", function () {
             infoWindow.close();
         });
     });
-
-    Swal.close();
 };
 
 const obtenerCategorias = () => {
@@ -195,8 +227,52 @@ const obtenerLugares = () => {
     });
 };
 
-const guardarFavorito = () => {
+const agregarFavorito = (modelo) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method: 'POST',
+            url: '/Lugares/GuardarFavorito',
+            data: { modelo },
+            success: resolve,
+            error: reject
+        });
+    });
+};
 
+const guardarFavorito = (id, lat, lng) => {
+    let modelo = {
+        idLugar: id,
+        idCategoria: categorias.val(),
+        nombre: $(`#nombre_${id}`).html(),
+        puntuacion: $(`#puntuacion_${id}`).html(),
+        direccion: $(`#direccion_${id}`).html(),
+        latitud: lat,
+        longitud: lng
+    };
+
+    agregarFavorito(modelo)
+        .then((resultado) => {
+            Swal.fire({
+                icon: 'info',
+                title: 'Lugar guardado',
+                text: `${modelo.nombre} se agregó a tus favoritos`,
+                confirmButtonText: 'ACEPTAR',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false
+            });
+        })
+        .catch((error) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ocurrió un error',
+                text: error.responseText,
+                confirmButtonText: 'ACEPTAR',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false
+            });
+        });
 }
 
 obtenerCategorias()

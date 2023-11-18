@@ -1,4 +1,4 @@
-﻿using APIFoursquare.Application;
+﻿using APIFoursquare.Application.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace APIFoursquare.Services.Interface
 {
     public interface IFoursquareService
     {
-        Task<List<LugarViewModel>> BuscarLugares(int categoria, decimal latitud, decimal longitud);
+        Task<List<LugarView>> BuscarLugares(int categoria, decimal latitud, decimal longitud);
     }
 }

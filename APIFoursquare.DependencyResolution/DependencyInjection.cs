@@ -34,6 +34,7 @@ namespace APIFoursquare.DependencyResolution
 
             services.AddTransient<IFoursquareService, FoursquareService>();
             services.AddTransient<ICategoriaService, CategoriaService>();
+            services.AddTransient<ILugarService, LugarService>();
         }
 
         /// <summary>

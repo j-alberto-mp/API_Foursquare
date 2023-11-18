@@ -17,14 +17,28 @@ namespace APIFoursquare.Repository.Implementation
 
         public Repository(ApiFoursquareDbContext context) => _context = context;
 
-        public Task<int> CountAsync()
+        public async Task<int> CountAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().CountAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<int> CountAsync(Expression<Func<T, bool>> condition)
+        public async Task<int> CountAsync(Expression<Func<T, bool>> condition)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().Where(condition).CountAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<bool> DeleteAsync(T entity)
@@ -47,14 +61,36 @@ namespace APIFoursquare.Repository.Implementation
             }
         }
 
-        public Task<T?> GetAsync(Expression<Func<T, bool>> condition, Expression<Func<T, object>>? orderBy = null, bool descending = false)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> condition, Expression<Func<T, object>>? orderBy = null, bool descending = false)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = _context.Set<T>().Where(condition);
+
+                if (orderBy != null)
+                {
+                    query = descending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+                }
+
+                return await query.FirstOrDefaultAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<TType?> GetAsync<TType>(Expression<Func<T, bool>> condition, Expression<Func<T, TType>> selection) where TType : class
+        public async Task<TType?> GetAsync<TType>(Expression<Func<T, bool>> condition, Expression<Func<T, TType>> selection) where TType : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().Where(condition).Select(selection).FirstOrDefaultAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<List<T>> GetListAsync()
@@ -69,34 +105,83 @@ namespace APIFoursquare.Repository.Implementation
             }
         }
 
-        public Task<List<T>> GetListAsync(Expression<Func<T, bool>> condition, Expression<Func<T, object>>? orderBy = null, bool descending = false)
+        public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> condition, Expression<Func<T, object>>? orderBy = null, bool descending = false)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = _context.Set<T>().Where(condition);
+
+                if (orderBy != null)
+                {
+                    query = descending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+                }
+
+                return await query.ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<List<TType>> GetListAsync<TType>(Expression<Func<T, bool>> condition, Expression<Func<T, TType>> selection) where TType : class
+        public async Task<List<TType>> GetListAsync<TType>(Expression<Func<T, bool>> condition, Expression<Func<T, TType>> selection) where TType : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().Where(condition).Select(selection).ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<List<TType>> GetListAsync<TType>(Expression<Func<T, TType>> selection) where TType : class
+        public async Task<List<TType>> GetListAsync<TType>(Expression<Func<T, TType>> selection) where TType : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().Select(selection).ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<List<T>> GetPagedReponseAsync(int pageNumber, int pageSize)
+        public async Task<List<T>> GetPagedReponseAsync(int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<List<T>> GetPagedReponseAsync(Expression<Func<T, bool>> condition, int pageNumber, int pageSize)
+        public async Task<List<T>> GetPagedReponseAsync(Expression<Func<T, bool>> condition, int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().Where(condition).Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<ICollection<TType>> GetPagedReponseAsync<TType>(Expression<Func<T, bool>> condition, Expression<Func<T, TType>> selection, int pageNumber, int pageSize) where TType : class
+        public async Task<ICollection<TType>> GetPagedReponseAsync<TType>(Expression<Func<T, bool>> condition, Expression<Func<T, TType>> selection, int pageNumber, int pageSize) where TType : class
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Set<T>().Where(condition).Select(selection).Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<T> InsertAsync(T entity)
@@ -119,9 +204,24 @@ namespace APIFoursquare.Repository.Implementation
             }
         }
 
-        public Task<bool> UpdateAsync(T entity)
+        public async Task<bool> UpdateAsync(T entity)
         {
-            throw new NotImplementedException();
+            using IDbContextTransaction dbTrans = _context.Database.BeginTransaction();
+            try
+            {
+                _context.Set<T>().Update(entity);
+                await _context.SaveChangesAsync();
+
+                dbTrans.Commit();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                dbTrans.Rollback();
+
+                throw;
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using APIFoursquare.Application;
+﻿using APIFoursquare.Application.Views;
 using APIFoursquare.Data;
 using APIFoursquare.Repository.Interface;
 using APIFoursquare.Services.Interface;
@@ -17,13 +17,13 @@ namespace APIFoursquare.Services.Implementation
             _mapper = mapper;
         }
 
-        public async Task<List<CategoriaViewModel>> ObtenerListaAsync()
+        public async Task<List<CategoriaView>> ObtenerListaAsync()
         {
             try
             {
                 List<Categoria> categorias = await _repository.GetListAsync();
 
-                return _mapper.Map<List<CategoriaViewModel>>(categorias);
+                return _mapper.Map<List<CategoriaView>>(categorias);
             }
             catch (Exception)
             {

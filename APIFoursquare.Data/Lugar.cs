@@ -24,8 +24,6 @@ namespace APIFoursquare.Data
         [Required]
         [Column(TypeName = "decimal(9, 6)")]
         public decimal Longitud { get; set; }
-        [Required]
-        public string Foto { get; set; }
 
         [ForeignKey("CategoriaId")]
         public Categoria Categoria { get; set; }

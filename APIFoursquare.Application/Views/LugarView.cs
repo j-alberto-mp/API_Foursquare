@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
 
-namespace APIFoursquare.Application
+namespace APIFoursquare.Application.Views
 {
     public class FoursquareResponse
     {
-        public List<LugarViewModel> Results { get; set; }
+        public List<LugarView> Results { get; set; }
     }
 
-    public class LugarViewModel
+    public class LugarView
     {
         [JsonProperty("fsq_id")]
         public string Id { get; set; }
@@ -18,8 +18,8 @@ namespace APIFoursquare.Application
         [JsonProperty("geocodes")]
         public Geocodes Geocodes { get; set; }
 
-        [JsonProperty("location.formatted_address")]
-        public string Direccion { get; set; }
+        [JsonProperty("location")]
+        public Location Direccion { get; set; }
 
         public decimal Puntuacion { get; set; }
 
@@ -39,6 +39,12 @@ namespace APIFoursquare.Application
 
         [JsonProperty("longitude")]
         public decimal Longitud { get; set; }
+    }
+
+    public class Location
+    {
+        [JsonProperty("formatted_address")]
+        public string Calle { get; set; }
     }
 
     public class Rating

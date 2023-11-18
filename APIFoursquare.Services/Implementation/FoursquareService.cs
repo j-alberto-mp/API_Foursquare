@@ -1,4 +1,5 @@
-﻿using APIFoursquare.Application;
+﻿using APIFoursquare.Application.Views;
+using APIFoursquare.Services.Helpers;
 using APIFoursquare.Services.Interface;
 using Newtonsoft.Json;
 using RestSharp;
@@ -12,15 +13,15 @@ namespace APIFoursquare.Services.Implementation
 {
     public class FoursquareService : IFoursquareService
     {
-        public async Task<List<LugarViewModel>> BuscarLugares(int categoria, decimal latitud, decimal longitud)
+        public async Task<List<LugarView>> BuscarLugares(int categoria, decimal latitud, decimal longitud)
         {
             try
             {
-                List<LugarViewModel> lugares = new();
+                List<LugarView> lugares = new();
 
                 RestClientOptions options = new($"https://api.foursquare.com/v3/places/search?ll={latitud}%2C{longitud}&radius=500&categories={categoria}&fields=fsq_id%2Cgeocodes%2Clocation%2Cname&limit=15");
                 
-                string contenidoLugares = await CrearPeticionAsync(options);
+                string contenidoLugares = await RequestHelper.CrearPeticionAsync(options);
 
                 if (!string.IsNullOrEmpty(contenidoLugares))
                 {
@@ -28,13 +29,13 @@ namespace APIFoursquare.Services.Implementation
 
                     lugares = respuesta.Results;
 
-                    foreach (LugarViewModel l in lugares)
+                    foreach (LugarView l in lugares)
                     {
                         try
                         {
                             RestClientOptions opcionesDetalle = new($"https://api.foursquare.com/v3/places/{l.Id}?fields=rating");
 
-                            string contenidoDetalle = await CrearPeticionAsync(opcionesDetalle);
+                            string contenidoDetalle = await RequestHelper.CrearPeticionAsync(opcionesDetalle);
 
                             Rating rating = JsonConvert.DeserializeObject<Rating>(contenidoDetalle) ?? new();
 
@@ -43,7 +44,7 @@ namespace APIFoursquare.Services.Implementation
 
                             RestClientOptions opcionesFotos = new($"https://api.foursquare.com/v3/places/{l.Id}/photos?limit=5&sort=NEWEST");
 
-                            string contenidoFotos = await CrearPeticionAsync(opcionesFotos);
+                            string contenidoFotos = await RequestHelper.CrearPeticionAsync(opcionesFotos);
 
                             l.FotosLugar = JsonConvert.DeserializeObject<List<Fotos>>(contenidoFotos) ?? new();
                         }
@@ -59,18 +60,6 @@ namespace APIFoursquare.Services.Implementation
             {
                 throw;
             }
-        }
-
-        private async Task<string> CrearPeticionAsync(RestClientOptions options)
-        {
-            using RestClient client = new(options);
-            RestRequest request = new("");
-            request.AddHeader("accept", "application/json");
-            request.AddHeader("Authorization", "fsq3IlTON2qs+3LS3P/t3Lp3Yf6ucNYG725FEIlNMPGwW2Y=");
-
-            RestResponse response = await client.GetAsync(request);
-
-            return response.Content ?? "";
         }
     }
 }
