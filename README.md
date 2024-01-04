@@ -1,5 +1,5 @@
 <h1 align="center">API Foursquare 🗺️</h1>
-Desarrollo web en .NET Core, con la integración de la API de Foursquare
+Desarrollo web en .NET Core, con la integración de la API de Foursquare, utilizando Onion Architecture
 
 - Búsqueda de lugares por categoría
 - Guardar un lugar en favoritos
